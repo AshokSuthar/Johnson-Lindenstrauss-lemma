@@ -6,6 +6,7 @@ import pandas as pd
 import random
 import math
 import scipy.spatial.distance as sp
+from sklearn import random_projection
 
 #checking distance measures in actual data and covariance of data.
 def data_cov_dif(adjustedData):
@@ -107,6 +108,26 @@ def data_sample_data_diff(data):
 		print()
 	print("\n\n")
 
+#checking distance measures in actual and projected data (using randomProjections)
+def data_user_proj_data_diff(data):
+	transformer = random_projection.SparseRandomProjection(n_components=10000)
+	projected_data = transformer.fit_transform(data)
+	print(np.shape(projected_data))
+	#printing pdist() of projected data
+	print("pdist of points in projected data")
+	print(sp.pdist(projected_data))
+	print()
+	print("\n\n")
+
+def data_JL_proj_data_diff(data):
+	transformer = random_projection.SparseRandomProjection()
+	projected_data = transformer.fit_transform(data)
+	print(np.shape(projected_data))
+	#printing pdist() of projected data
+	print("pdist of points in JL projected data")
+	print(sp.pdist(projected_data))
+	print()
+	print("\n\n")
 
 def generate_data(data_type):
 	if data_type == 0:
@@ -117,7 +138,7 @@ def generate_data(data_type):
 		data = np.array(data)
 	else:
 		print("Generating normalized random data(100x100) as input data")
-		data = np.random.normal(0,5,(100,100))
+		data = np.random.normal(0,5,(100,10000))
 	return data
 
 
@@ -141,9 +162,11 @@ if __name__ == "__main__":
 	#mean adjusting actual data
 	mean_adjusted_data = data-data_mean
 	#calling functions
-	data_cov_dif(mean_adjusted_data)
-	data_reduced_data_diff(mean_adjusted_data)
-	data_sample_data_diff(data)
+	#data_cov_dif(mean_adjusted_data)
+	#data_reduced_data_diff(mean_adjusted_data)
+	#data_sample_data_diff(data)
+	data_user_proj_data_diff(data)
+	data_JL_proj_data_diff(data)
 	print("Done!")
 
 
