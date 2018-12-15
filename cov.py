@@ -110,22 +110,22 @@ def data_sample_data_diff(data):
 
 #checking distance measures in actual and projected data(reduced dimension) according to user given dimensions of target data. (randomProjections)
 def data_user_proj_data_diff(data,targ_dim):
-	#finding minimum dimension reduction possible using JL lemma, while preserving pairwise distances upto a given eps value.
-	min_dim = random_projection.johnson_lindenstrauss_min_dim(100,eps=0.1)
-	print("min dim suggested by JL lemma= "+str(min_dim))
 	#creating transformer matrix to use for projecting the input data to target data. if O = IR. transformer is R here.
 	transformer = random_projection.SparseRandomProjection(n_components=targ_dim)
 	#transforming given "data"(input) to "projected_data"(output) by using "transformer" as random matrix R.
 	projected_data = transformer.fit_transform(data)
-	print("new data dimensions after projection according to user provided target data dimension: "+str(np.shape(projected_data)))
+	print("\n\nnew data dimensions after projection according to user provided target data dimension: "+str(np.shape(projected_data)))
 	#printing pdist() of projected data
 	print("pdist of points in projected data as per user provided target data dimension")
 	print(sp.pdist(projected_data))
-	print()
 	print("\n\n")
 
 #checking distance measures in actual and projected data(reduced dimension) using target dimension value according to JL lemma . (randomProjections)
 def data_JL_proj_data_diff(data):
+	n_row = len(data)
+	#finding minimum dimension reduction possible using JL lemma, while preserving pairwise distances upto a given eps value.
+	min_dim = random_projection.johnson_lindenstrauss_min_dim(n_row,eps=0.1)
+	print("min dim suggested by JL lemma with eps = 0.1 is "+str(min_dim))
 	#creating transformer matrix to use for projecting the input data to target data. if O = IR. transformer is R here.
 	transformer = random_projection.SparseRandomProjection()
 	#transforming given "data"(input) to "projected_data"(output) by using "transformer" as random matrix R.
@@ -134,7 +134,6 @@ def data_JL_proj_data_diff(data):
 	#printing pdist() of projected data
 	print("pdist of points in JL projected data")
 	print(sp.pdist(projected_data))
-	print()
 	print("\n\n")
 
 def generate_data(data_type):
@@ -160,7 +159,7 @@ if __name__ == "__main__":
 	targ_dim = int(input("Enter dimensionality of target data wanted by user:"))
 	#Standard deviation of actual data
 	data_SD = math.sqrt(np.sum(np.square(data-data_mean)))/(len(data)-1)
-	print("Standard Deviation in actual data")
+	print("\n\nStandard Deviation in actual data")
 	print(data_SD)
 	
 	#printing pdist of actual data
