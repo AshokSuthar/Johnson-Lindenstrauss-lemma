@@ -116,9 +116,10 @@ def data_user_proj_data_diff(data,targ_dim):
 	projected_data = transformer.fit_transform(data)
 	print("\n\nnew data dimensions after projection according to user provided target data dimension: "+str(np.shape(projected_data)))
 	#printing pdist() of projected data
-	print("pdist of points in projected data as per user provided target data dimension")
-	print(sp.pdist(projected_data))
+	#print("pdist of points in projected data as per user provided target data dimension")
+	#print(sp.pdist(projected_data))
 	print("\n\n")
+	return sp.pdist(projected_data)
 
 #checking distance measures in actual and projected data(reduced dimension) using target dimension value according to JL lemma . (randomProjections)
 def data_JL_proj_data_diff(data):
@@ -132,15 +133,34 @@ def data_JL_proj_data_diff(data):
 	projected_data = transformer.fit_transform(data)
 	print("new data dimensions after projection according to user provided target data dimension: "+str(np.shape(projected_data)))
 	#printing pdist() of projected data
-	print("pdist of points in JL projected data")
-	print(sp.pdist(projected_data))
+	#print("pdist of points in JL projected data")
+	#print(sp.pdist(projected_data))
 	print("\n\n")
+	return sp.pdist(projected_data)
 
 def generate_data(data_type):
-	if data_type == 0:
-		df = pd.read_csv('iris.csv',sep=",",header=None)
-		print("Taking Iris.data(150x4) as input data")
-		data = df.iloc[:, :4]
+	if data_type == 1:
+		df = pd.read_csv('DataSets/Lung.txt',sep="\s+",header=None)
+		print("Taking Lung(181x12533) as input data")
+		data = df.iloc[:, :12533]
+		#converting to numpy array
+		data = np.array(data)
+	elif data_type == 2:
+		df = pd.read_csv('DataSets/Leukimia.txt',sep="\s+",header=None)
+		print("Taking Leukimia(72x7129) as input data")
+		data = df.iloc[:, :7129]
+		#converting to numpy array
+		data = np.array(data)
+	elif data_type == 3:
+		df = pd.read_csv('DataSets/GCM.txt',sep="\s+",header=None)
+		print("Taking GCM(181x16063) as input data")
+		data = df.iloc[:, :16063]
+		#converting to numpy array
+		data = np.array(data)
+	elif data_type == 4:
+		df = pd.read_csv('DataSets/Prostate.txt',sep="\s+",header=None)
+		print("Taking Prostate(181x12600) as input data")
+		data = df.iloc[:, :12533]
 		#converting to numpy array
 		data = np.array(data)
 	else:
@@ -150,30 +170,47 @@ def generate_data(data_type):
 
 
 if __name__ == "__main__":
-	data_type = int(input("Press '0' to work with iris data set or anyother number to work with randomly generated data:"))
+	data_type = int(input("Choose appropriate input\n 1. Lung data set \n 2. Leukimia\n 3. GCM\n 4. Prostate \n 0. randomly generated data:\n"))
 	#calling generate_data() for data to be generated/read.
 	data = generate_data(data_type)
 	#mean of actual data
-	data_mean = np.mean(data, axis=0)
+	#data_mean = np.mean(data, axis=0)
 	#taking user input for dimensionality of target data wanted by user
 	targ_dim = int(input("Enter dimensionality of target data wanted by user:"))
 	#Standard deviation of actual data
-	data_SD = math.sqrt(np.sum(np.square(data-data_mean)))/(len(data)-1)
-	print("\n\nStandard Deviation in actual data")
-	print(data_SD)
-	
-	#printing pdist of actual data
-	print("pdist of points in actual data")
-	print(sp.pdist(data))
+	#data_SD = math.sqrt(np.sum(np.square(data-data_mean)))/(len(data)-1)
+	#print("\n\nStandard Deviation in actual data")
+	#print(data_SD)
 
 	#mean adjusting actual data
-	mean_adjusted_data = data-data_mean
+	#mean_adjusted_data = data-data_mean
 	#calling functions
 	#data_cov_dif(mean_adjusted_data)
 	#data_reduced_data_diff(mean_adjusted_data)
 	#data_sample_data_diff(data)
-	data_user_proj_data_diff(data,targ_dim)
-	data_JL_proj_data_diff(data)
+	user_pdist = data_user_proj_data_diff(data,targ_dim)
+	JL_pdist = data_JL_proj_data_diff(data)
+	actual_pdist = sp.pdist(data)
+	#printing pdist of actual data
+	print("pdist of points in actual data")
+	print(actual_pdist)
+	print()
+	print("pdist of points in projected data as per user provided target data dimension")
+	print(user_pdist)
+	print()
+	print("pdist of points in JL projected data")
+	print(JL_pdist)
+	print()
+	#finding relative error w.r.t. user_pdist
+	user_error = (abs(actual_pdist - user_pdist)/actual_pdist)*100
+	#finding relative error w.r.t. JL_pdist
+	JL_error = (abs(actual_pdist - JL_pdist)/actual_pdist)*100
+	print("Relative error w.r.t. user_pdist")
+	print(user_error)
+	print()
+	print("Relative error w.r.t. JL_pdist")
+	print(JL_error)
+	print()
 	print("Done!")
 
 
