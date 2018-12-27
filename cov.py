@@ -1,6 +1,6 @@
 #Program For: checking and comparing distance preservation in different samples of data or based on chosen eigenVectors
 #Author: Ashok Suthar
-#Input: 0 for using IRIS data, or any other number for randomly generating 100x100 matrix.
+#Input: Choose appropriate input\n 1. Lung data set \n 2. Leukimia\n 3. GCM\n 4. Prostate \n 0. randomly generated data:\n
 import numpy as np
 import pandas as pd
 import random
